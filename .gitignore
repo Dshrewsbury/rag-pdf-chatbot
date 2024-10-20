@@ -1,0 +1,5 @@
+.vscode
+.venv
+models
+test_embeddings
+__pycache__

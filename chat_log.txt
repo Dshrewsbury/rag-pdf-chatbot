@@ -1,0 +1,123 @@
+Question: USER QUESTION: What do you know about Brand Engagement Network?
+CONTEXT: Brand Engagement Network is an AI company that many people want to work for.
+Response:  Hello! I'm here to help you with your question. To answer your question, Brand Engagement Network is an AI company that specializes in developing innovative solutions for various industries. They use cutting-edge technologies like natural language processing and machine learning to help businesses improve their customer engagement and loyalty.
+However, I must clarify that the context you provided does not directly relate to the question you asked. You mentioned that many people want to work for Brand Engagement Network, but that is not a direct answer to your question about what the company does. If you have any further questions or clarifications regarding the company, please feel free to ask!
+Latency: 67.13 seconds
+
+Question: User: What is Brand Engagement Network
+
+Context: This is Brand Engagement Network Inc.  
+ 
+Congratulations!  You are now in the second step of the selection process. The purpose of 
+this step is to validate that your skills match some of our needs. For this purpose, below 
+you will find a small task that should not take a long time to complete.  
+ 
+Task: Retrieval Augmented Generation  
+ 
+Given a paper with information that has never been seen by a large language model (LLM), 
+we aim to incorporate this new information into the LLM. One method to achieve this is 
+through retrieval augmented generation. In this approach, crucial data from the paper is 
+provided to the LLM, enabling it to reason and respond based on that information. 
+Typically, the paper and the user's query are encoded into vector embeddings.   
+ 
+Tasks to Complete:  
+1. Using the REST protocol, develop a chatbot that can accurately and truthfully answer 
+queries related to the paper titled "Llama 2: Open Foundation and Fine -Tuned Chat 
+Models" by MetaAI.  
+ 
+2. Monitor and measure the latency of the chatbot's responses. We suggest using a 
+language model running on CPU (libraries such as llama.cpp or ctranslate2 are of great 
+help) 
+ 
+3. Store the chatbot's responses in a database. This will allow for the retrieval of previous 
+responses, eliminating the need to use global variables for this purpose.  
+ 
+4. Experiment with various strategies for segmenting the paper into text chunks.  
+Submission:
+Response:  Hello! Thank you for participating in the selection process at Brand Engagement Network Inc. I'm here to help you with the task at hand. To answer your question, can you please provide more information about the paper titled "Llama 2: Open Foundation and Fine-Tuned Chat Models" by MetaAI? What specifically are you looking to retrieve from the paper, and how do you want me to incorporate the new information into a large language model?
+Latency: 52.60 seconds
+
+Question: 
+
+Context: This is Brand Engagement Network Inc.  
+ 
+Congratulations!  You are now in the second step of the selection process. The purpose of 
+this step is to validate that your skills match some of our needs. For this purpose, below 
+you will find a small task that should not take a long time to complete.  
+ 
+Task: Retrieval Augmented Generation  
+ 
+Given a paper with information that has never been seen by a large language model (LLM), 
+we aim to incorporate this new information into the LLM. One method to achieve this is 
+through retrieval augmented generation. In this approach, crucial data from the paper is 
+provided to the LLM, enabling it to reason and respond based on that information. 
+Typically, the paper and the user's query are encoded into vector embeddings.   
+ 
+Tasks to Complete:  
+1. Using the REST protocol, develop a chatbot that can accurately and truthfully answer 
+queries related to the paper titled "Llama 2: Open Foundation and Fine -Tuned Chat 
+Models" by MetaAI.  
+ 
+2. Monitor and measure the latency of the chatbot's responses. We suggest using a 
+language model running on CPU (libraries such as llama.cpp or ctranslate2 are of great 
+help) 
+ 
+3. Store the chatbot's responses in a database. This will allow for the retrieval of previous 
+responses, eliminating the need to use global variables for this purpose.  
+ 
+4. Experiment with various strategies for segmenting the paper into text chunks.  
+Submission:User: What do you know about Brand Engagement Network?
+Response:  Hello! Thank you for reaching out to us. Brand Engagement Network is a company that specializes in providing cutting-edge technology solutions for businesses. They offer a range of services, including digital marketing, data analytics, and customer engagement platforms. Their mission is to help brands build meaningful connections with their customers through innovative and personalized experiences. Is there anything else you would like to know about Brand Engagement Network?
+Latency: 41.80 seconds
+
+Question: 
+
+Context: 1. Questions asked to the chatbot.  
+2. Responses received.  
+3. Latency measured in seconds.  
+Thank you.User: Hey wahts up man?
+Response:  Hello! *smiling* What's up with you? 😊
+Latency: 21.76 seconds
+
+Question: 
+
+Context: This is Brand Engagement Network Inc.  
+ 
+Congratulations!  You are now in the second step of the selection process. The purpose of 
+this step is to validate that your skills match some of our needs. For this purpose, below 
+you will find a small task that should not take a long time to complete.  
+ 
+Task: Retrieval Augmented Generation  
+ 
+Given a paper with information that has never been seen by a large language model (LLM), 
+we aim to incorporate this new information into the LLM. One method to achieve this is 
+through retrieval augmented generation. In this approach, crucial data from the paper is 
+provided to the LLM, enabling it to reason and respond based on that information. 
+Typically, the paper and the user's query are encoded into vector embeddings.   
+ 
+Tasks to Complete:  
+1. Using the REST protocol, develop a chatbot that can accurately and truthfully answer 
+queries related to the paper titled "Llama 2: Open Foundation and Fine -Tuned Chat 
+Models" by MetaAI.  
+ 
+2. Monitor and measure the latency of the chatbot's responses. We suggest using a 
+language model running on CPU (libraries such as llama.cpp or ctranslate2 are of great 
+help) 
+ 
+3. Store the chatbot's responses in a database. This will allow for the retrieval of previous 
+responses, eliminating the need to use global variables for this purpose.  
+ 
+4. Experiment with various strategies for segmenting the paper into text chunks.  
+Submission:User: What do you know about Brand Engagement Network?
+Response:  Hello! *smiling* Thank you for asking! Brand Engagement Network is a company that specializes in providing cutting-edge language models and chatbots for various industries. Our team of experts has developed innovative solutions to help businesses improve their customer engagement and response times. We're glad you're interested in learning more about us! 😊 Can I help you with anything else?
+Latency: 89.02 seconds
+
+Question: 
+
+Context: 1. Questions asked to the chatbot.  
+2. Responses received.  
+3. Latency measured in seconds.  
+Thank you.User: hey there tim
+Response:  Hello! How can I assist you today? Please provide the question you would like me to answer.
+Latency: 9.35 seconds
+
