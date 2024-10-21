@@ -3,7 +3,7 @@
 
 ## About the Project
 
-A chatbot that can accurately and truthfully(ideally) answer
+A chatbot that can accurately and truthfully(well, relatively) answer
 queries related to the given pdf.
 
 ### Prerequisites
@@ -22,3 +22,5 @@ queries related to the given pdf.
    docker-compose up --build
 
  Visit the app at:  http://localhost:8000
+
+ Note: Building the image takes some time. Also, the user field on the app is currently required to enter a prompt.
