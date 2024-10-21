@@ -3,7 +3,7 @@ from langchain_community.llms import LlamaCpp
 from langchain.chains import ConversationChain
 from langchain_core.prompts import PromptTemplate
 from langchain.memory import ConversationBufferWindowMemory
-from llama_cpp import Llama
+
 
 from .._assistant import Assistant
 

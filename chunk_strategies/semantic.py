@@ -7,6 +7,11 @@ from langchain_community.document_loaders import PyPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from llama_cpp import Llama
 
+"""
+Note: Currently not working due to returning far too much, leading to a context window that is too big
+"""
+
+
 # Load PDF
 file = "../data/llama2.pdf"
 loader = PyPDFLoader(file)

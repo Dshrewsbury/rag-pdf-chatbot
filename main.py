@@ -15,7 +15,7 @@ Includes endpoints for message handling, response streaming, and a web-based cha
 
 Note: Old Langchain seems terrible for prompt modification/control, leading to setup with too many globals and weird 
       grouping/pairings. Refactor with from scratch implementation if time allows or just regular RAG pipeline
-      but im in too deep atm
+      but too close to the deadline atm
 """
 
 assistant: Assistant

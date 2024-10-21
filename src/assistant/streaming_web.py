@@ -7,6 +7,7 @@ from llama_cpp import Llama
 from qdrant_client import QdrantClient
 from src.memory_database import MemoryDatabaseManager
 
+# Refactor to remove globals
 embedding_llm = Llama(
     model_path="./models/mxbai-embed-large-v1-f16.gguf",
     embedding=True,
@@ -72,7 +73,7 @@ class StreamingWebCallbackHandler(BaseCallbackHandler):
         self.log_interaction(self.original_question, self.response, latency)
 
         # Save the interaction and embeddings into the database after generating the response
-        # Obviously sucks to parse out context here, needs refactor
+        # Obviously sucks to add context here, needs refactor
         user_input_plus_response = f"{self.question}\n\n{self.response}"
         embeddings = memory_db.get_local_embedding(user_input_plus_response)
         memory_db.save_to_database(user_input_plus_response, embeddings)
