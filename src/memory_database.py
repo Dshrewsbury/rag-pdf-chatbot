@@ -6,11 +6,14 @@ import pandas as pd
 import os
 from llama_cpp import Llama
 from sklearn.metrics.pairwise import cosine_similarity
-
+"""
+    SQLLite implementation of long term memory management
+    Using a basic similarity search
+    Currently storing the combined quetion + response
+"""
 class MemoryDatabaseManager:
     def __init__(self, db_path: str, embedding_llm: Llama):
         self.db_path = db_path
-
         self.embedding_model = embedding_llm
         self.setup_database()
 
@@ -77,6 +80,5 @@ class MemoryDatabaseManager:
         return cosine_similarity(embedding1, embedding2)[0][0]
 
     def get_local_embedding(self, text):
-        # Use the local embeddings model to generate embeddings
         embedding = self.embedding_model.create_embedding(text)['data'][0]['embedding']
         return embedding

@@ -1,5 +1,7 @@
 .vscode
 .venv
-models
-test_embeddings
+.idea/
+models/*
+embeddings/*
 __pycache__
+chat_history.db

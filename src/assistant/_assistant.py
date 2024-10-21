@@ -1,11 +1,15 @@
 import hashlib
 from typing import Any, Dict, Optional
-
 from langchain.chains import LLMChain
 from langchain.schema.language_model import BaseLanguageModel
-
 from .streaming_web import StreamingWebCallbackHandler
 
+"""
+    Parent class to Chat Class
+    Handles Basic Chain management
+    Note: Currently using old LLMChain from Langchain for basic implementation
+          If time allows, upgrade to LangGraph or create from scratch
+"""
 class Assistant():
     model: BaseLanguageModel
     chains: Dict[str, LLMChain] = {}

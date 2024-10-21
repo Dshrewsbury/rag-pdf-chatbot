@@ -4,32 +4,27 @@ from fastapi import BackgroundTasks, FastAPI, Request, Response
 from fastapi.responses import HTMLResponse 
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
-from llama_cpp import Llama
-from qdrant_client import QdrantClient
 from sse_starlette.sse import EventSourceResponse
-from src.memory_database import MemoryDatabaseManager
 from src.assistant import Assistant, StreamingWebCallbackHandler
 from src.assistant.chains.chat import Chat
 
+"""
+FastAPI server for chatbot application using Qdrant for vector-based memory retrieval.
+Handles user interactions by generating embeddings, searching for relevant context, and streaming real-time responses. 
+Includes endpoints for message handling, response streaming, and a web-based chat interface.
+
+Note: Old Langchain seems terrible for prompt modification/control, leading to setup with too many globals and weird 
+      grouping/pairings. Refactor with from scratch implementation if time allows or just regular RAG pipeline
+      but im in too deep atm
+"""
+
 assistant: Assistant
-memory_db: MemoryDatabaseManager
-client: QdrantClient
-embedding_llm: Llama
 
 @asynccontextmanager
 async def lifespan(_: FastAPI):
-    global assistant, memory_db, client, embedding_llm
+    global assistant
     assistant = Chat("./models/llama-2-7b-chat.Q4_K_M.gguf")
-    embedding_llm = Llama(
-        model_path="./models/mxbai-embed-large-v1-f16.gguf",
-        embedding=True,
-        verbose=False,
-        n_batch=512,
-        max_tokens=512
-    )
-    memory_db = MemoryDatabaseManager(db_path="chat_history.db", embedding_llm=embedding_llm)
-    client = QdrantClient(path="test_embeddings")
-        
+
     yield
 
     assistant.chains.clear()
@@ -74,38 +69,17 @@ async def streamed_response(user_id: str):
 class Message(BaseModel):
     username: str
     data: str
-    
+
+
 @app.post('/message')
 async def handle_message(message: Message, tasks: BackgroundTasks):
-
     chain, chain_hash = assistant.add_chain(
         key=message.username, 
         human_prefix=message.username
     )
 
-    question = "USER: " + message.data
 
-    # user_input_embedding = memory_db.get_local_embedding(question)
-    # top_similar = memory_db.find_top_n_similar(user_input_embedding, n=1)
-    # if not top_similar.empty:
-    #     similar_results = "\n".join(top_similar['user_input_plus_response'].values)
-    #     # print(f"Similar past interactions found:\n{similar_results}\n")
-    #     # Optionally, append this to the current input for more context
-    #     question += f"\nLONG MEMORY: {similar_results}"
-
-    query_vector = embedding_llm.create_embedding(message.data)['data'][0]['embedding']
-    search_results = client.search(
-        collection_name="podcast",
-        query_vector=query_vector,
-        limit=1
-    )
-    #print(f"Context:\n{search_results}\n")
-    context = "\n\n".join([row.payload['text'] for row in search_results])
-    question = f"\n\nContext: {context}" + "User: " + message.data
-
-    print("QUESTION: ", question)
-
-    tasks.add_task(chain.invoke, question)
+    tasks.add_task(chain.invoke, message.data)
 
     return {
         'id': str(chain_hash),
