@@ -5,17 +5,13 @@ from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
 from sse_starlette.sse import EventSourceResponse
-from src.assistant import Assistant, StreamingWebCallbackHandler
-from src.assistant.chains.chat import Chat
+from assistant import Assistant
+
 
 """
 FastAPI server for chatbot application using Qdrant for vector-based memory retrieval.
 Handles user interactions by generating embeddings, searching for relevant context, and streaming real-time responses. 
-Includes endpoints for message handling, response streaming, and a web-based chat interface.
-
-Note: Old Langchain seems terrible for prompt modification/control, leading to setup with too many globals and weird 
-      grouping/pairings. Refactor with from scratch implementation if time allows or just regular RAG pipeline
-      but too close to the deadline atm
+Includes endpoints for message handling, response streaming, and a web-based chat interface.      
 """
 
 assistant: Assistant
@@ -23,23 +19,25 @@ assistant: Assistant
 @asynccontextmanager
 async def lifespan(_: FastAPI):
     global assistant
-    assistant = Chat("./models/llama-2-7b-chat.Q4_K_M.gguf")
+    assistant = Assistant("../models/llama-2-7b-chat.Q4_K_M.gguf")
 
-    yield
+    yield # Yielding to keep the app running and active until shutdown
 
-    assistant.chains.clear()
+    assistant.session_data.clear() # Clearing sessions on app shutdown
 
 templates = Jinja2Templates(directory="templates")
 app = FastAPI(lifespan=lifespan)
 
+
 @app.get('/response/{user_id}')
 async def streamed_response(user_id: str):
-    chain = assistant.get_chain(user_id)
-    if chain is None or len(chain.callbacks) <= 0:
+    session = assistant.get_session(user_id)
+    if session is None or "handler" not in session:
         return Response(status_code=422)
 
-    handler: StreamingWebCallbackHandler = chain.callbacks[0]
+    handler = session["handler"]  # Get the user-specific handler
 
+    # Streaming
     def generate():
         while True:
             while len(handler.tokens) > 0:
@@ -51,20 +49,23 @@ async def streamed_response(user_id: str):
                     "data": token
                 }
 
-            if handler.is_responding == False:
+            # Yielding 'waiting' event if the assistant is not responding
+            if not handler.is_responding:
                 yield {
-                    "event": "assistant-waiting",
-                    "id": handler.response_id,
-                    "data": 'waiting'
+                        "event": "assistant-waiting",
+                        "id": handler.response_id,
+                        "data": 'waiting'
                 }
-            elif handler.response != None:
+            # Sending the complete response once ready
+            elif handler.response is not None:
                 yield {
-                    "event": "assistant-response",
-                    "id": handler.response_id,
-                    "data": handler.get_response()
+                        "event": "assistant-response",
+                        "id": handler.response_id,
+                        "data": handler.get_response()
                 }
 
-    return EventSourceResponse(generate())
+    return EventSourceResponse(generate())  # Streaming response to frontend
+
 
 class Message(BaseModel):
     username: str
@@ -73,21 +74,27 @@ class Message(BaseModel):
 
 @app.post('/message')
 async def handle_message(message: Message, tasks: BackgroundTasks):
-    chain, chain_hash = assistant.add_chain(
-        key=message.username, 
+
+    # Retrieve or create a session for the user
+    session_data, session_hash = assistant.add_session(
+        key=message.username,
         human_prefix=message.username
     )
 
 
-    tasks.add_task(chain.invoke, message.data)
+    tasks.add_task(assistant.invoke_chain, message.username, message.data)
 
+    # Returning metadata about the message to the frontend
     return {
-        'id': str(chain_hash),
+        'id': str(session_hash),
         'name': message.username,
         'message': message.data,
         'timestamp': datetime.datetime.now().strftime('%m/%d/%Y, %H:%M:%S')
     }
 
+
+# GET endpoint to serve the chat UI template for the frontend
+# Renders the chat UI template with Jinja2, providing an interface for the user to interact with
 @app.get('/', response_class=HTMLResponse)
 async def chat_ui(req: Request):
     return templates.TemplateResponse('chat_ui.html', { "request": req })

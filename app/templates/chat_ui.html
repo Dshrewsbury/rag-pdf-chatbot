@@ -79,6 +79,7 @@
             const message = chatForm.querySelector("textarea");
             const payload = { username, data: message.value };
 
+            // When a user submits a message, the handleUserMessage function in JavaScript sends it via a POST request to /message
             fetch('/message', {
                 method: 'POST',
                 body: JSON.stringify(payload),
@@ -86,6 +87,10 @@
                     "Content-Type": "application/json"
                 }
             })
+            // This is where the frontend listens for responses from the assistant.
+            // Events like "assistant-responding" and "assistant-response" trigger updates in the chat interface.
+            // The EventSource API here is key to streaming. It opens a persistent connection to /response/{user_id},
+            // allowing the backend to continuously send response tokens to the frontend
             .then(res => res.json())
             .then(data => {
                 if(!user_id || !responseEventSource) {
@@ -107,51 +112,70 @@
         }
 
         function handleAssistantMessage(event, shouldConcatenate = true) {
-            setChatEnabled(false)
+            // Disables the chat form, preventing user input while processing
+            setChatEnabled(false);
+
+            // Checks if the message ID is new; this avoids re-adding existing messages
             const isNewMessage = !messages.some(msg => msg.id === event.lastEventId);
-            
-            if(isNewMessage) {
+
+            if (isNewMessage) {
+                // If it's a new message from the assistant, push an empty message structure
                 pushMessage({
-                    id: event.lastEventId,
-                    name: 'llama',
-                })
+                    id: event.lastEventId,  // Assigns the assistant's message ID
+                    name: 'llama',          // Sets the sender name as "llama" (the assistant)
+                });
             }
 
+            // Selects the existing message component using the event's unique ID
             const messageComponent = document.querySelector(`#message-${event.lastEventId}`);
+
+            // Retrieves current text content of the message to handle streaming tokens
             const currentText = messageComponent.querySelector("#content").innerText;
-            messageComponent.querySelector("#content").innerText = shouldConcatenate 
+
+            // Updates the message component's content by either appending the new token
+            // (if `shouldConcatenate` is true) or replacing the content with the latest event data
+            messageComponent.querySelector("#content").innerText = shouldConcatenate
                 ? currentText + event.data
                 : event.data;
 
+            // Scrolls the chat container smoothly to the bottom to keep the latest messages in view
             const chatContainer = document.querySelector("#chat");
-            chatContainer.scrollTo({top: chatContainer.scrollHeight + messageComponent.scrollHeight, behavior:"smooth"})
+            chatContainer.scrollTo({top: chatContainer.scrollHeight + messageComponent.scrollHeight, behavior: "smooth"});
         }
-        
+
         function pushMessage(message) {
+            // Clones the message template, creating a new message component for the chat
             const messageComponent = document
                 .querySelector("#message-template-component")
                 .cloneNode(true);
 
-            const parsedTimestamp = new Date(message?.timestamp || Date.now()).toLocaleString("pt-BR",{ timeStyle: "short"});
-            
-            messageComponent.id = `message-${message.id}`;
-            messageComponent.querySelector("#name").innerText = message?.name;
-            messageComponent.querySelector("#content").innerText = message?.message ?? '';
-            messageComponent.querySelector("#timestamp").innerText = parsedTimestamp;
+            // Formats the current timestamp to display when the message was sent
+            const parsedTimestamp = new Date(message?.timestamp || Date.now()).toLocaleString("pt-BR", { timeStyle: "short" });
 
+            // Sets unique IDs and message details for the cloned message component
+            messageComponent.id = `message-${message.id}`;  // ID based on message ID
+            messageComponent.querySelector("#name").innerText = message?.name;  // Sender's name
+            messageComponent.querySelector("#content").innerText = message?.message ?? '';  // Message content
+            messageComponent.querySelector("#timestamp").innerText = parsedTimestamp;  // Message timestamp
+
+            // Determines if the message is from the assistant or the user
             const isAssistant = message?.name !== username;
 
-            messageComponent.classList.toggle('bg-violet-500', isAssistant);
-            messageComponent.classList.toggle('bg-indigo-500', !isAssistant);
-            
-            messageComponent.classList.toggle('self-start', isAssistant);
-            messageComponent.classList.toggle('self-end', !isAssistant);
+            // Applies styling based on whether the message is from the assistant or user
+            messageComponent.classList.toggle('bg-violet-500', isAssistant);  // Assistant's messages
+            messageComponent.classList.toggle('bg-indigo-500', !isAssistant);  // User's messages
+            messageComponent.classList.toggle('self-start', isAssistant);  // Aligns assistant messages to the start
+            messageComponent.classList.toggle('self-end', !isAssistant);    // Aligns user messages to the end
 
+            // Makes the message component visible in the chat window
             messageComponent.hidden = false;
-            
+
+            // Adds the message component to the chat container and scrolls to the latest message
             const chatContainer = document.querySelector("#chat");
             chatContainer.appendChild(messageComponent);
-            chatContainer.scrollTo({top: chatContainer.scrollHeight + messageComponent.scrollHeight, behavior:"smooth"})
+            chatContainer.scrollTo({top: chatContainer.scrollHeight + messageComponent.scrollHeight, behavior: "smooth"});
+
+            // Stores the message in the `messages` array to keep track of chat history
             messages.push(message);
         }
         
