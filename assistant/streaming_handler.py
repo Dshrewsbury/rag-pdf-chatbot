@@ -1,12 +1,14 @@
 import sys
 import time
+from typing import List, Optional
 from uuid import UUID
-from typing import Any, Dict, List, Optional
 
 """
 Handles real-time token streaming for each user query.
 Manages session information like response tracking and latency logging.
 """
+
+
 class StreamingCallbackHandler:
 
     def __init__(self):
@@ -15,6 +17,7 @@ class StreamingCallbackHandler:
         self.response_id: Optional[UUID] = None
         self.response: Optional[str] = None
         self.start_time: Optional[float] = None
+        self.question = ""
 
 
     def on_token(self, token: str):
@@ -32,7 +35,6 @@ class StreamingCallbackHandler:
 
 
     def on_end(self, response: str):
-
         # Log the question, response, and latency
         self.is_responding = False
         self.response = response
@@ -46,13 +48,13 @@ class StreamingCallbackHandler:
 
 
     def get_response(self) -> str:
-
         response_result = self.response or ""
         self.response = None  # Clear after retrieval
         return response_result
 
 
-    def log_interaction(self, question: str, response: str, latency: float):
+    @staticmethod
+    def log_interaction(question: str, response: str, latency: float):
         with open("chat_log.txt", "a") as f:
             f.write(f"Question: {question}\n")
             f.write(f"Response: {response}\n")

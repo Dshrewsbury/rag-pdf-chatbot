@@ -1,11 +1,12 @@
-import uuid
 import time
+import uuid
 
-from qdrant_client import QdrantClient
-from qdrant_client.models import Distance, VectorParams, PointStruct
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from llama_cpp import Llama
+from qdrant_client import QdrantClient
+from qdrant_client.models import Distance, VectorParams, PointStruct
+
 from chunk_strategies.utils import chunk
 
 # Dont think i need separate batches, as i am not doing much processing outside of the llm

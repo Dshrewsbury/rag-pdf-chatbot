@@ -1,11 +1,11 @@
 from llama_cpp import Llama
 from qdrant_client import QdrantClient
+
 from assistant.memory_database import MemoryDatabaseManager
 
 
 class ContextManager:
     def __init__(self):
-
         self.embedding_llm = Llama(
             model_path="../models/mxbai-embed-large-v1-f16.gguf",
             embedding=True,
@@ -18,7 +18,6 @@ class ContextManager:
 
 
     def build_context(self, user_key: str, query: str) -> (str, str):
-
         # Fetch relevant documents based on the query
         query_vector = self.embedding_llm.create_embedding(query)['data'][0]['embedding']
         search_results = self.client.search(
@@ -29,11 +28,10 @@ class ContextManager:
 
         context = "\n\n".join([row.payload['text'] for row in search_results])
 
-
         # Retrieve user-specific conversation history
         user_input_embedding = self.memory_db.get_local_embedding(query)
         top_similar = self.memory_db.find_top_n_similar(user_input_embedding, n=1)
-        relevant_history= ''
+        relevant_history = ''
         if not top_similar.empty:
             relevant_history = "\n".join(top_similar['user_input_plus_response'].values)
             # print(f"Similar past interactions found:\n{similar_results}\n")
@@ -41,7 +39,8 @@ class ContextManager:
         return context, relevant_history
 
 
-    def build_prompt(self, context: str, history: str, query: str) -> str:
+    @staticmethod
+    def build_prompt(context: str, history: str, query: str) -> str:
         """
         Constructs the final prompt by combining context, history, and query.
         """

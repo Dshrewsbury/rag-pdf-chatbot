@@ -1,15 +1,20 @@
 import hashlib
 import uuid
 from typing import Any, Dict, Optional
-from assistant.streaming_handler import StreamingCallbackHandler
+
 from llama_cpp import Llama
+
 from assistant.context_manager import ContextManager
+from assistant.streaming_handler import StreamingCallbackHandler
 
 """
 Generic RAG AI Assistant defines the overall architecture and methods needed for managing assistant sessions. 
 """
-class Assistant():
+
+
+class Assistant:
     llm: Llama
+
 
     def __init__(self, model_path: str):
         self.llm = Llama(

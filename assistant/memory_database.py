@@ -1,14 +1,17 @@
-import sqlite3
 import json
+import os
+import sqlite3
+
 import numpy as np
-from sklearn.metrics.pairwise import cosine_similarity
 import pandas as pd
 from llama_cpp import Llama
-import os
+from sklearn.metrics.pairwise import cosine_similarity
 
 """
     Handles all long/short term memory via SQL Lite
 """
+
+
 class MemoryDatabaseManager:
     def __init__(self, db_path: str, embedding_llm: Llama):
 
@@ -81,7 +84,8 @@ class MemoryDatabaseManager:
         return top_n_df
 
 
-    def similarity_search(self, embedding1, embedding2):
+    @staticmethod
+    def similarity_search(embedding1, embedding2):
         embedding1 = np.array(embedding1).reshape(1, -1)
         embedding2 = np.array(embedding2).reshape(1, -1)
         return cosine_similarity(embedding1, embedding2)[0][0]

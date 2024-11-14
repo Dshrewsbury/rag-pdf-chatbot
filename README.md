@@ -3,8 +3,15 @@
 
 ## About the Project
 
-A chatbot that can accurately and truthfully(well, relatively) answer
-queries related to the given pdf.
+A retrieval-augmented generation (RAG) system designed to read, understand, and answer questions about a given research paper in PDF format.
+
+This RAG chatbot:
+
+- Reads and processes PDFs: Extracts and answers questions about content from research papers.
+- Memory management: Uses SQLite for both short-term memory and long-term memory.
+- Qdrant embeddings: Utilizes Qdrant as a vector database for efficient retrieval
+- Flexible chunking: Implements both recursive and semantic chunking
+- RESTful API
 
 ### Prerequisites
 - Docker installed ([Docker Install Guide](https://docs.docker.com/get-docker/))
@@ -23,4 +30,13 @@ queries related to the given pdf.
 
  Visit the app at:  http://localhost:8000
 
- Note: Building the image takes some time. Also, the user field on the app is currently required to enter a prompt.
+## Upcoming Work
+
+Planned improvements include:
+
+- Evaluation Metrics: Adding methods to assess response accuracy and relevance.
+- Hierarchical Document Processing: Enhancing chunking to better capture the PDF’s internal structure.
+- Adaptive Retrieval and Agentic Chunking: Dynamically adjusting retrieval and chunking based on user interactions.
+- Entity Extraction and Summarization: Capturing key entities for memory and providing concise summaries.
+- Multi-modal Retrieval and Hybrid Search: Supporting diverse document types and combining search methods for improved accuracy.
+- Re-ranking: Prioritizing the most relevant chunks for each query.

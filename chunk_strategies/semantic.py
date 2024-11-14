@@ -1,11 +1,12 @@
 import uuid
+
 import numpy as np
-from sklearn.metrics.pairwise import cosine_similarity
-from qdrant_client import QdrantClient
-from qdrant_client.models import Distance, VectorParams, PointStruct
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from llama_cpp import Llama
+from qdrant_client import QdrantClient
+from qdrant_client.models import Distance, VectorParams, PointStruct
+from sklearn.metrics.pairwise import cosine_similarity
 
 """
 Note: Currently not working due to returning far too much, leading to a context window that is too big
@@ -16,7 +17,6 @@ with chunks that are too big for the context
 Also overlap and recursive chunking is unnecessary as the goal is to group together semantically similar chunks
 using uuid as a unique identifier for each chunk
 """
-
 
 # Load PDF
 file = "../data/llama2.pdf"
@@ -60,6 +60,7 @@ def calculate_cosine_distances(chunk_embeddings):
         distance = 1 - similarity
         distances.append(distance)
     return distances
+
 
 # Calculate distances between embeddings of each adjacent chunk
 distances = calculate_cosine_distances(chunk_embeddings)
